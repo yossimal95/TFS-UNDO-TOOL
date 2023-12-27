@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TFS undo - Scripts Generator</title>
+    <style>
+        * {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+		.version {
+		    color: silver;
+			font-size: 10pt;
+			font-style: italic;
+			cursor: pointer;
+		}
+	
+        p {
+            font-weight: bold;
+            color: #0a335d;
+        }
+
+        body {
+            background-color: #f5faff;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        .container>input,
+        textarea {
+            font-size: 13pt;
+            margin: 0px auto 10px auto;
+        }
+
+        textarea {
+            width: 770px;
+            height: 150px;
+        }
+
+        #output {
+            padding: 20px;
+        }
+
+        .result {
+            margin: 10px;
+            cursor: pointer;
+        }
+
+        .copied-alert {}
+
+        .info {
+            border: 1px solid #9ca5ae;
+            display: inline-block;
+            width: 19px;
+            border-radius: 50%;
+            cursor: pointer;
+            color: #9ca5ae;
+        }
+    </style>
+</head>
+
+<body>
+	<span class="version">V2.0</span>
+    <div class="container">
+        <p>Workspace Name</p>
+        <input id="workspacename" type="text" placeholder="WORKSPASE-NAME" autocomplete="on">
+        <br>
+        <p>Workspace Owner <span title="ALSO: YOUR-DOMAIN\client_name" class="info">!</span></p>
+        <input id="workspaceowner" type="text" placeholder="אושר עד - מתכנת – פלוני אלמוני" autocomplete="on">
+        <br>
+        <p>File Path. You can put multiple paths (separate with ",")</p>
+        <textarea id="filePath" placeholder="$/path_to_file/file.js"></textarea>
+        <br>
+        <input id="recursive" type="checkbox"> <label for="recursive">Recursive</label>
+        <br>
+        <button onclick="printScripts()">CREATE SCRIPT</button>
+        <div id="output"></div>
+    </div>
+    <script>
+	
+		let yc = `                          
+			▀███▀   ▀██▀     ▄▄█▀▀▀█▄█
+			  ███   ▄█     ▄██▀     ▀█
+			   ███ ▄█      ██▀       ▀
+				████       ██         
+				 ██        ██▄        
+				 ██        ▀██▄     ▄▀
+			   ▄████▄        ▀▀█████▀ 
+									  
+									  
+			`;
+		console.log(yc);
+		
+        const test = () => {
+            document.querySelector('#workspacename').value = 'IPS-09547';
+            document.querySelector('#workspaceowner').value = 'פימ - מתכנת - נתנאל ונסון';
+            document.querySelector('#filePath').value = '$/IPS/Tzohar2/Develop/Kidma.DataService.PR/Kidma.DataServices.PR.csproj,$/IPS/Tzohar2/Develop/Kidma.DataService.PR/Kidma.DataServices.PR.csproj,$/IPS/Tzohar2/Develop/Kidma.DataService.PR/Kidma.DataServices.PR.csproj,$/IPS/Tzohar2/Develop/Kidma.DataService.PR/Kidma.DataServices.PR.csproj,$/IPS/Tzohar2/Develop/Kidma.DataService.PR/Kidma.DataServices.PR.csproj';
+        }
+
+        const createScript = () => {
+
+            let filesArr = document.querySelector('#filePath').value.trim().split(',');
+
+            return filesArr.map(item => {
+                return '<div onclick="copy(this.innerText)" class="result" title="click to copy..">' +
+                    'tf undo ' + (document.querySelector('#recursive').checked ? '/recursive ' : '') + '/workspace:"' +
+                    document.querySelector('#workspacename').value.trim() +
+                    ';' +
+                    document.querySelector('#workspaceowner').value.trim() +
+                    '" "' + item + '"' +
+                    '</div>';
+            });
+        }
+
+        const printScripts = () => {
+            let scriptsArrInDivs = createScript();
+            document.querySelector('#output').innerHTML = '<b><p>(Click to copy..)</p></b>';
+            scriptsArrInDivs.forEach(item => {
+                document.querySelector('#output').innerHTML += item;
+            });
+
+        }
+	
+        const copy = (str) => {
+            navigator.clipboard.writeText(str);
+            event.target.style.color = 'green';
+            event.target.title = 'Copied!';
+        }
+    </script>
+</body>
+</html>
